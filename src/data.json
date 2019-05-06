@@ -1,6 +1,6 @@
 {
 	"templates": {
 		"html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n\t<meta charset=\"UTF-8\">\n\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n\t<meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n\t<style>\n\t\thtml, body {\n\t\t\twidth: 100vw;\n\t\t\theight: 100vh;\n\t\t\tbackground: black;\n\t\t\tdisplay: flex;\n\t\t\tjustify-content: center;\n\t\t\talign-items: center;\n\t\t\toverflow: hidden;\n\t\t}\n\t</style>\n\t<script src=\"[APP_MAIN]\"></script>\n\t<title>[APP_NAME]</title>\n</head>\n<body>\n\t<!-- (c) [APP_AUTHOR] -->\n</body>\n</html>\n",
-		"js": "//\n// built using ferramenta\n// https://github.com/mininmobile/ferramenta-cli\n//\n// (c) [APP_AUTHOR]\n//\n"
+		"js": "//\n// built using ferramenta\n// https://github.com/mininmobile/ferramenta-cli\n//\n// (c) [APP_AUTHOR]\n//\n\n"
 	}
 }

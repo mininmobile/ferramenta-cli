@@ -24,6 +24,7 @@ switch (args[0]) {
 
 		if (!fs.existsSync(path + "manifest.json")) {
 			error("Cannot locate manifest.json");
+			break;
 		}
 
 		// create bin/ if missing
@@ -53,6 +54,8 @@ switch (args[0]) {
 
 		let outPath = main.substring(0, main.lastIndexOf(".")) + ".js";
 
+		let source = fs.readFileSync(path + manifest.main, "utf-8");
+
 		// build
 		info("Building...");
 
@@ -60,6 +63,47 @@ switch (args[0]) {
 
 		{ // attach metadata
 			out = out.replace("[APP_AUTHOR]", author);
+		}
+
+		{ // convert
+			let indent = 0;
+
+			let lines = source.split("\n").map(x => x.trim());
+
+			lines.forEach((_line) => {
+				if (_line.length == 0)
+					return;
+
+				let indents = "";
+
+				if (indent > 0)
+					indents = "\t".repeat(indent);
+
+				let line = _line.match(/[^'"` ]+|"[^"]+"|'[^']+'|`[^`]+`/g);
+
+				switch (line[0]) {
+					case "using": {
+
+					} break;
+
+					case "function": {
+						out += indents + "{\n";
+						indent++;
+					} break;
+
+					case "}": {
+						indent--;
+						out += "\t".repeat(indent) + "}\n";
+					} break;
+
+					default: {
+						let command = line.shift();
+						let args = line.join(", ");
+
+						out += indents + `${command}(${args});\n`;
+					}
+				}
+			});
 		}
 
 		// write
