@@ -9,7 +9,70 @@ args.splice(0, 2);
 
 switch (args[0]) {
 	case "-b": case "--build": {
-		error("Not implemented");
+		// directory location
+		let path = "./";
+
+		if (args[1]) {
+			path += `${args[1]}/`;
+		}
+
+		// important tests
+		if (!fs.existsSync(path)) {
+			error(`Cannot locate directory: "${path}"`);
+			break;
+		}
+
+		if (!fs.existsSync(path + "manifest.json")) {
+			error("Cannot locate manifest.json");
+		}
+
+		// create bin/ if missing
+		if (!fs.existsSync(path + "bin/")) {
+			info(`Creating: "${path}bin/"`);
+			fs.mkdirSync(path + "bin/");
+		}
+
+		// get manifest
+		info("Reading manifest");
+		let manifest = JSON.parse(fs.readFileSync(path + "manifest.json", "utf-8"));
+
+		// insure main is specified
+		if (!manifest.main) {
+			error("No main script specified");
+			break;
+		}
+
+		if (!fs.existsSync(path + manifest.main)) {
+			error(`Cannot locate main script: ${path}${manifest.main}`);
+			break;
+		}
+
+		// get meta
+		let main = manifest.main;
+		let author = manifest.author || "No Author Specified";
+
+		let outPath = main.substring(0, main.lastIndexOf(".")) + ".js";
+
+		// build
+		info("Building...");
+
+		let out = data.templates.js;
+
+		{ // attach metadata
+			out = out.replace("[APP_AUTHOR]", author);
+		}
+
+		// write
+		info("Writing...");
+		
+		fs.writeFileSync(`${path}bin/${outPath}`, out);
+
+		// finish
+		console.log([
+			"",
+			"Finished building",
+			`Output location: ${path}bin/${outPath}`,
+		].join("\n"));
 	} break;
 
 	case "-B": case "--build-html": {
@@ -41,7 +104,7 @@ switch (args[0]) {
 		info("Reading manifest");
 		let manifest = JSON.parse(fs.readFileSync(path + "manifest.json", "utf-8"));
 
-		// set meta
+		// get meta
 		let main = manifest.main || "main.ferra";
 		let name = manifest.name || "Untitled";
 		let author = manifest.author || "No Author Specified";
@@ -81,7 +144,7 @@ switch (args[0]) {
 		lines.push(
 			"usage: ferramenta operation [directory]",
 			"",
-			"operation;",
+			"operations;",
 			"\t-b, --build       builds project in the specified directory",
 			"\t-B, --build-html  builds html file of project in the specified directory"
 		);

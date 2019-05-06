@@ -1,7 +1,6 @@
 using graphics
 
-function main
-	graphics.setfill #fff
+function main {
 	graphics.rectangle 100 100 100 100
-	graphics.fill
-	exit
+	graphics.fill "#fff"
+}

@@ -1,3 +1,6 @@
+# Compiled Binaries
+test/bin/
+
 # Logs
 logs
 *.log
