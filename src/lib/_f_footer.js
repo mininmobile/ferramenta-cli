@@ -1,9 +1,7 @@
-let temp = {}
-
-if (main) {
+if (typeof main == "function") {
 	main();
 
-	if (loop) {
+	if (typeof loop == "function") {
 		(function FERRAMENTA_LOOP() {
 			requestAnimationFrame(FERRAMENTA_LOOP);
 

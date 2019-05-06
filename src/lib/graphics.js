@@ -1,9 +1,11 @@
-{ // init
+{ // init graphics
 	let canvas = document.createElement("canvas");
 	let ctx = canvas.getContext("2d");
 
 	canvas.width = document.body.clientWidth;
 	canvas.height = document.body.clientHeight;
+
+	document.body.appendChild(canvas);
 
 	temp.graphics = {
 		canvas,
@@ -20,6 +22,8 @@ const graphics = {
 	},
 
 	fill(color) {
+		let ctx = temp.graphics.ctx;
+
 		ctx.fillStyle = color;
 		ctx.fill();
 	},

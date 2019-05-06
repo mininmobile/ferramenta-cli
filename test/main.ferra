@@ -1,4 +1,4 @@
-using graphics
+using <graphics>
 
 function main {
 	graphics.rectangle 100 100 100 100

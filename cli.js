@@ -52,6 +52,7 @@ switch (args[0]) {
 		let main = manifest.main;
 		let author = manifest.author || "No Author Specified";
 
+		let libPath = __dirname + "/src/lib/";
 		let outPath = main.substring(0, main.lastIndexOf(".")) + ".js";
 
 		let source = fs.readFileSync(path + manifest.main, "utf-8");
@@ -65,14 +66,23 @@ switch (args[0]) {
 			out = out.replace("[APP_AUTHOR]", author);
 		}
 
+		{ // import default module
+			out += fs.readFileSync(libPath + "_f_header.js", "utf-8");
+			out += "\n";
+		}
+
 		{ // convert
+			let code = 0;
+
 			let indent = 0;
 
 			let lines = source.split("\n").map(x => x.trim());
 
-			lines.forEach((_line) => {
+			for (let i = 0; i < lines.length; i++) {
+				let _line = lines[i];
+
 				if (_line.length == 0)
-					return;
+					continue;
 
 				let indents = "";
 
@@ -83,11 +93,30 @@ switch (args[0]) {
 
 				switch (line[0]) {
 					case "using": {
+						if (line[1]) {
+							if (line[1].startsWith("<") &&
+							    line[1].endsWith(">")) {
+								let module = line[1].substring(1, line[1].length - 1) + ".js";
 
+								out += fs.readFileSync(libPath + module, "utf-8") + "\n";
+							} else {
+								// compile then append ferra file
+							}
+						} else {
+							code = i + 1;
+							error("No library specified");
+							break;
+						}
 					} break;
 
 					case "function": {
-						out += indents + "{\n";
+						line.shift();
+						line.pop();
+
+						let command = line.shift();
+						let args = line.join(", ");
+
+						out += indents + `function ${command}(${args}) {\n`;
 						indent++;
 					} break;
 
@@ -103,7 +132,17 @@ switch (args[0]) {
 						out += indents + `${command}(${args});\n`;
 					}
 				}
-			});
+			}
+
+			{ // import default module
+				out += "\n";
+				out += fs.readFileSync(libPath + "_f_footer.js", "utf-8");
+			}
+
+			if (code != 0) {
+				error(`Location: line ${code}`)
+				break;
+			}
 		}
 
 		// write
