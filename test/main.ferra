@@ -1,7 +1,7 @@
 using graphics
 
 function main
-	graphics.fill #fff
+	graphics.setfill #fff
 	graphics.rectangle 100 100 100 100
 	graphics.fill
 	exit
