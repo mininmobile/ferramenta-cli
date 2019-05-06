@@ -1,0 +1,25 @@
+{
+	"name": "ferramenta-cli",
+	"description": "A game engine that compiles to JS.",
+	"author": "",
+	"version": "1.0.0",
+	"license": "MIT",
+	"homepage": "https://github.com/mininmobile/ferramenta-cli#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mininmobile/ferramenta-cli.git"
+	},
+	"bugs": {
+		"url": "https://github.com/mininmobile/ferramenta-cli/issues"
+	},
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"bin": {
+		"ferramenta": "./cli.js"
+	},
+	"dependencies": {
+		"chalk": "^2.4.2"
+	}
+}

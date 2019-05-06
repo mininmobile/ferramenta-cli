@@ -1,0 +1,1 @@
+throw new Error("Cannot use ferramenta as a module!");
