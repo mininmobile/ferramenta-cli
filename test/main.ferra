@@ -1,6 +1,6 @@
 using <graphics>
 
 function main {
-	graphics.rectangle 100 100 100 100
-	graphics.fill "#fff"
+	x = "hi"
+	console.log x
 }

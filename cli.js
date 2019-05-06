@@ -92,6 +92,8 @@ switch (args[0]) {
 				let line = _line.match(/[^'"` ]+|"[^"]+"|'[^']+'|`[^`]+`/g);
 
 				switch (line[0]) {
+					case "//": break;
+
 					case "using": {
 						if (line[1]) {
 							if (line[1].startsWith("<") &&
@@ -126,10 +128,18 @@ switch (args[0]) {
 					} break;
 
 					default: {
-						let command = line.shift();
-						let args = line.join(", ");
+						if (["=", "+=", "-=", "*=", "/="].includes(line[1])) {
+							let name = line.shift();
 
-						out += indents + `${command}(${args});\n`;
+							let operation = line.shift();
+
+							out += indents + `let ${name} ${operation} ${line.join(" ")};\n`;
+						} else {
+							let command = line.shift();
+							let args = line.join(", ");
+	
+							out += indents + `${command}(${args});\n`;
+						}
 					}
 				}
 			}

@@ -3,9 +3,5 @@
 	"author": "zvava",
 	"version": "1.0.0",
 
-	"main": "main.ferra",
-
-	"libraries": [
-		"graphics"
-	]
+	"main": "main.ferra"
 }
