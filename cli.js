@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const fs = require("fs");
 const chalk = require("chalk");
+const data = require("./src/data.json");
 
 let args = process.argv;
 
@@ -12,12 +13,14 @@ switch (args[0]) {
 	} break;
 
 	case "-B": case "--build-html": {
+		// directory location
 		let path = "./";
 
 		if (args[1]) {
 			path += `${args[1]}/`;
 		}
 
+		// important tests
 		if (!fs.existsSync(path)) {
 			error(`Cannot locate directory: "${path}"`);
 			break;
@@ -28,13 +31,41 @@ switch (args[0]) {
 			break;
 		}
 
-		info("Reading manifest");
-		let manifest = require("./manifest.json");
-
+		// create bin/ if missing
 		if (!fs.existsSync(path + "bin/")) {
-			info("No bin directory yet");
+			info(`Creating: "${path}bin/"`);
 			fs.mkdirSync(path + "bin/");
 		}
+
+		// get manifest
+		info("Reading manifest");
+		let manifest = JSON.parse(fs.readFileSync(path + "manifest.json", "utf-8"));
+
+		// set meta
+		let main = manifest.main || "main.ferra";
+		let name = manifest.name || "Untitled";
+		let author = manifest.author || "No Author Specified";
+
+		// build html
+		info("Building...")
+
+		let out = data.templates.html;
+
+		out = out.replace("[APP_MAIN]", main.substring(0, main.lastIndexOf(".")) + ".js");
+		out = out.replace("[APP_NAME]", name);
+		out = out.replace("[APP_AUTHOR]", author);
+
+		// write html
+		info("Writing...");
+		
+		fs.writeFileSync(path + "bin/index.html", out);
+
+		// finish
+		console.log([
+			"",
+			"Finished building html",
+			`Output location: ${path}bin/index.html`,
+		].join("\n"));
 	} break;
 
 	default: {
